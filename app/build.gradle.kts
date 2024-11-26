@@ -10,6 +10,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.hilt.android.plugin)
 }
 
 android {
@@ -76,10 +78,20 @@ dependencies {
     implementation(libs.retrofit.converter.moshi)
     implementation(libs.moshi)
     implementation(libs.moshi.kotlin)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.compose.ui.test)
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
+}
+
+kapt {
+    correctErrorTypes = true
+}
+
+hilt {
+    enableAggregatingTask = true
 }
