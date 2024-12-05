@@ -79,6 +79,8 @@ dependencies {
     implementation(libs.moshi)
     implementation(libs.moshi.kotlin)
     implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
+
     kapt(libs.hilt.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
