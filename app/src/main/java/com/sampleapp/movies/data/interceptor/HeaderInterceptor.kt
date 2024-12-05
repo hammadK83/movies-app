@@ -1,4 +1,4 @@
-package com.sampleapp.movies.service
+package com.sampleapp.movies.data.interceptor
 
 import com.sampleapp.movies.BuildConfig
 import okhttp3.Interceptor
