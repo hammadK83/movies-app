@@ -1,5 +1,7 @@
 package com.sampleapp.movies.presentation.ui.screen
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,8 +18,14 @@ import com.sampleapp.movies.presentation.state.MoviesListState
 import com.sampleapp.movies.presentation.viewmodel.MoviesViewModel
 
 @Composable
-fun MoviesListScreen(viewModel: MoviesViewModel = hiltViewModel()) {
-    when (val state = viewModel.moviesListState.collectAsState().value) {
+fun MoviesScreen(viewModel: MoviesViewModel = hiltViewModel()) {
+    val state = viewModel.moviesListState.collectAsState().value
+
+    if (state == MoviesListState.Loading) {
+        viewModel.fetchPopularMovies()
+    }
+
+    when (state) {
         is MoviesListState.Loading -> {
             CircularProgressIndicator(modifier = Modifier.fillMaxSize())
         }
@@ -28,12 +36,12 @@ fun MoviesListScreen(viewModel: MoviesViewModel = hiltViewModel()) {
             Text(text = "Failed to load movies", modifier = Modifier.fillMaxSize())
         }
     }
-    viewModel.fetchPopularMovies()
 }
 
 @Composable
 fun MoviesList(movies: List<Movie>) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()) {
         items(movies) { movie ->
             Text(
                 text = movie.title.orEmpty(),
