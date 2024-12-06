@@ -3,7 +3,7 @@ package com.sampleapp.movies.data.model
 import com.squareup.moshi.Json
 
 data class MovieApiModel(
-    val id: Int?,
+    val id: Long?,
     @Json(name = "poster_path")
     val posterPath: String?,
     @Json(name = "genre_ids")

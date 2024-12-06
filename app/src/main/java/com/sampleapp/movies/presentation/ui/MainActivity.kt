@@ -9,7 +9,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.sampleapp.movies.presentation.ui.screen.MainScreen
-import com.sampleapp.movies.presentation.ui.screen.MoviesScreen
 import com.sampleapp.movies.presentation.ui.theme.MoviesTheme
 import com.sampleapp.movies.presentation.viewmodel.MoviesViewModel
 import dagger.hilt.android.AndroidEntryPoint

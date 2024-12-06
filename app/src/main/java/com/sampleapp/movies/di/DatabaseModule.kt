@@ -8,6 +8,7 @@ import com.sampleapp.movies.util.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -16,7 +17,7 @@ import javax.inject.Singleton
 object DatabaseModule {
     @Provides
     @Singleton
-    fun provideMovieDatabase(appContext: Context): MovieDatabase {
+    fun provideMovieDatabase(@ApplicationContext appContext: Context): MovieDatabase {
         return Room.databaseBuilder(
             appContext,
             MovieDatabase::class.java,
