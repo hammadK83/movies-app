@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt.android.plugin)
+    alias(libs.plugins.google.devtools.ksp)
 }
 
 android {
@@ -80,8 +81,11 @@ dependencies {
     implementation(libs.moshi.kotlin)
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
-
     kapt(libs.hilt.compiler)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(platform(libs.compose.bom))
