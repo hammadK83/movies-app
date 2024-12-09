@@ -4,6 +4,7 @@ import com.sampleapp.movies.data.local.MovieDatabase
 import com.sampleapp.movies.data.mapper.toDbEntity
 import com.sampleapp.movies.data.mapper.toDomainModel
 import com.sampleapp.movies.data.remote.MoviesApiService
+import com.sampleapp.movies.domain.model.Configuration
 import com.sampleapp.movies.domain.model.Movie
 import com.sampleapp.movies.domain.repository.MoviesRepository
 import javax.inject.Inject
@@ -34,4 +35,7 @@ class MoviesRepositoryImpl @Inject constructor(
     override suspend fun removeFavoriteMovie(movie: Movie) {
         movieDatabase.movieDao().deleteMovie(movie.toDbEntity())
     }
+
+    override suspend fun getConfiguration(): Configuration =
+        moviesApiService.getConfiguration()
 }
