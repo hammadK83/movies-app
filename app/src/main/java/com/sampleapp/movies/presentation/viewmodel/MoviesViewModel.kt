@@ -37,6 +37,10 @@ class MoviesViewModel @Inject constructor(
         }
     }
 
+    fun createImageUrl(imagePath: String?) = configuration?.imageBaseUrl?.let {
+        "$it/w500/$imagePath"
+    }
+
     init {
         getConfiguration()
     }
