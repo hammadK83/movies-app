@@ -1,7 +1,9 @@
 package com.sampleapp.movies.data.mapper
 
 import com.sampleapp.movies.data.local.MovieEntity
+import com.sampleapp.movies.data.model.ConfigurationApiResponseModel
 import com.sampleapp.movies.data.model.MovieApiModel
+import com.sampleapp.movies.domain.model.Configuration
 import com.sampleapp.movies.domain.model.Movie
 
 fun MovieApiModel.toDomainModel() =
@@ -31,4 +33,9 @@ fun Movie.toDbEntity() =
         title = this.title,
         overview = this.overview,
         releaseDate = this.releaseDate
+    )
+
+fun ConfigurationApiResponseModel.toDomainModel() =
+    Configuration(
+        imageBaseUrl = this.imagesApiModel.baseUrl
     )

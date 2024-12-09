@@ -18,10 +18,10 @@ class MoviesViewModel @Inject constructor(
     private val getPopularMoviesUseCase: GetPopularMoviesUseCase,
     private val getConfigurationUseCase: GetConfigurationUseCase
 ) : ViewModel() {
-    private var configuration: Configuration? = null
-
     private val moviesListStateMutable = MutableStateFlow<MoviesListState>(MoviesListState.Loading)
     val moviesListState = moviesListStateMutable.asStateFlow()
+
+    var configuration: Configuration? = null
 
     fun fetchPopularMovies() {
         viewModelScope.launch {

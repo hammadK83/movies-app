@@ -37,5 +37,5 @@ class MoviesRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getConfiguration(): Configuration =
-        moviesApiService.getConfiguration()
+        moviesApiService.getConfiguration().toDomainModel()
 }
