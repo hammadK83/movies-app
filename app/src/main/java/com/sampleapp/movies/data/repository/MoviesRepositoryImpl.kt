@@ -36,6 +36,9 @@ class MoviesRepositoryImpl @Inject constructor(
         movieDatabase.movieDao().deleteMovie(movie.toDbEntity())
     }
 
+    override suspend fun getFavoriteById(id: Long): Movie? =
+        movieDatabase.movieDao().getFavoriteById(id)?.toDomainModel()
+
     override suspend fun getConfiguration(): Configuration =
         moviesApiService.getConfiguration().toDomainModel()
 }

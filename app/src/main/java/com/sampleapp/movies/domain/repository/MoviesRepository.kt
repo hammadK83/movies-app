@@ -8,5 +8,6 @@ interface MoviesRepository {
     suspend fun getFavoriteMovies(): List<Movie>
     suspend fun addFavoriteMovie(movie: Movie)
     suspend fun removeFavoriteMovie(movie: Movie)
+    suspend fun getFavoriteById(id: Long): Movie?
     suspend fun getConfiguration(): Configuration
 }

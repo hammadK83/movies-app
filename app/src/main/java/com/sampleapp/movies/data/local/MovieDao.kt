@@ -3,11 +3,13 @@ package com.sampleapp.movies.data.local
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.sampleapp.movies.domain.model.Movie
 
 @Dao
 interface MovieDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovie(movie: MovieEntity)
 
     @Delete
@@ -15,4 +17,7 @@ interface MovieDao {
 
     @Query("SELECT * FROM favorite_movies")
     suspend fun getAllFavoriteMovies(): List<MovieEntity>
+
+    @Query("SELECT * FROM favorite_movies WHERE id = :id LIMIT 1")
+    suspend fun getFavoriteById(id: Long): MovieEntity?
 }

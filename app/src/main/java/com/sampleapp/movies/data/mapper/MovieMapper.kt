@@ -24,10 +24,12 @@ fun MovieEntity.toDomainModel() =
         title = this.title,
         overview = this.overview,
         releaseDate = this.releaseDate,
+        isFavorite = true
     )
 
 fun Movie.toDbEntity() =
     MovieEntity(
+        id = this.id,
         posterPath = this.posterPath,
         genreIds = this.genreIds,
         title = this.title,

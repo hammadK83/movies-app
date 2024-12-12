@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -24,7 +25,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -109,15 +112,19 @@ fun MovieItem(movie: Movie, viewModel: MoviesViewModel) {
                         .padding(8.dp)
                         .size(36.dp)
                         .background(Color.White, CircleShape)
-                        .border(1.dp, MaterialTheme.colorScheme.onPrimary, CircleShape), // Circular white background
+                        .border(
+                            1.dp,
+                            MaterialTheme.colorScheme.onPrimary,
+                            CircleShape
+                        ), // Circular white background
                     contentAlignment = Alignment.Center // Center-align the icon within the circle
                 ) {
                     IconButton(
-                        onClick = { /* TODO: Handle click */ },
+                        onClick = { viewModel.toggleFavorite(movie) },
                         modifier = Modifier.padding(4.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.FavoriteBorder, // Replace with your heart icon
+                            imageVector = if (movie.isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                             contentDescription = null, // TODO: Update this based on the favorite state
                             tint = MaterialTheme.colorScheme.primary
                         )
