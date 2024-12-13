@@ -1,6 +1,7 @@
 package com.sampleapp.movies.data.remote
 
 import com.sampleapp.movies.data.model.ConfigurationApiResponseModel
+import com.sampleapp.movies.data.model.GenresApiResponseModel
 import com.sampleapp.movies.data.model.MoviesApiResponseModel
 import retrofit2.http.GET
 
@@ -12,4 +13,7 @@ interface MoviesApiService {
 
     @GET("configuration")
     suspend fun getConfiguration(): ConfigurationApiResponseModel
+
+    @GET("genre/movie/list")
+    suspend fun getGenres(): GenresApiResponseModel
 }

@@ -3,11 +3,13 @@ package com.sampleapp.movies.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sampleapp.movies.domain.model.Configuration
+import com.sampleapp.movies.domain.model.Genre
 import com.sampleapp.movies.domain.model.Movie
 import com.sampleapp.movies.domain.usecase.AddFavoriteUseCase
 import com.sampleapp.movies.domain.usecase.GetConfigurationUseCase
 import com.sampleapp.movies.domain.usecase.GetFavoriteByIdUseCase
 import com.sampleapp.movies.domain.usecase.GetFavoritesUseCase
+import com.sampleapp.movies.domain.usecase.GetGenresUseCase
 import com.sampleapp.movies.domain.usecase.GetPopularMoviesUseCase
 import com.sampleapp.movies.domain.usecase.RemoveFavoriteUseCase
 import com.sampleapp.movies.presentation.state.MoviesListState
@@ -24,7 +26,8 @@ class MoviesViewModel @Inject constructor(
     private val addFavoriteUseCase: AddFavoriteUseCase,
     private val removeFavoriteUseCase: RemoveFavoriteUseCase,
     private val getFavoritesUseCase: GetFavoritesUseCase,
-    private val getFavoriteByIdUseCase: GetFavoriteByIdUseCase
+    private val getFavoriteByIdUseCase: GetFavoriteByIdUseCase,
+    private val getGenresUseCase: GetGenresUseCase
 ) : ViewModel() {
     private val moviesListStateMutable = MutableStateFlow<MoviesListState>(MoviesListState.Loading)
     val moviesListState = moviesListStateMutable.asStateFlow()
@@ -34,6 +37,8 @@ class MoviesViewModel @Inject constructor(
     val favoriteMoviesState = favoriteMoviesStateMutable.asStateFlow()
 
     private var configuration: Configuration? = null
+
+    private var genres: List<Genre>? = null
 
     fun fetchPopularMovies() {
         viewModelScope.launch {
@@ -108,7 +113,14 @@ class MoviesViewModel @Inject constructor(
         }
     }
 
+    private fun getGenres() {
+        viewModelScope.launch {
+            genres = getGenresUseCase.invoke()
+        }
+    }
+
     init {
         getConfiguration()
+        getGenres()
     }
 }

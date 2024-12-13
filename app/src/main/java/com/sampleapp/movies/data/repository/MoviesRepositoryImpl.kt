@@ -5,6 +5,7 @@ import com.sampleapp.movies.data.mapper.toDbEntity
 import com.sampleapp.movies.data.mapper.toDomainModel
 import com.sampleapp.movies.data.remote.MoviesApiService
 import com.sampleapp.movies.domain.model.Configuration
+import com.sampleapp.movies.domain.model.Genre
 import com.sampleapp.movies.domain.model.Movie
 import com.sampleapp.movies.domain.repository.MoviesRepository
 import javax.inject.Inject
@@ -41,4 +42,9 @@ class MoviesRepositoryImpl @Inject constructor(
 
     override suspend fun getConfiguration(): Configuration =
         moviesApiService.getConfiguration().toDomainModel()
+
+    override suspend fun getGenres(): List<Genre> =
+        moviesApiService.getGenres().genres.map {
+            it.toDomainModel()
+        }
 }
