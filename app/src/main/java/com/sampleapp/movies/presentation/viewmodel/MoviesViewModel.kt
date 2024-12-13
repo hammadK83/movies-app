@@ -7,6 +7,7 @@ import com.sampleapp.movies.domain.model.Movie
 import com.sampleapp.movies.domain.usecase.AddFavoriteUseCase
 import com.sampleapp.movies.domain.usecase.GetConfigurationUseCase
 import com.sampleapp.movies.domain.usecase.GetFavoriteByIdUseCase
+import com.sampleapp.movies.domain.usecase.GetFavoritesUseCase
 import com.sampleapp.movies.domain.usecase.GetPopularMoviesUseCase
 import com.sampleapp.movies.domain.usecase.RemoveFavoriteUseCase
 import com.sampleapp.movies.presentation.state.MoviesListState
@@ -22,10 +23,15 @@ class MoviesViewModel @Inject constructor(
     private val getConfigurationUseCase: GetConfigurationUseCase,
     private val addFavoriteUseCase: AddFavoriteUseCase,
     private val removeFavoriteUseCase: RemoveFavoriteUseCase,
+    private val getFavoritesUseCase: GetFavoritesUseCase,
     private val getFavoriteByIdUseCase: GetFavoriteByIdUseCase
 ) : ViewModel() {
     private val moviesListStateMutable = MutableStateFlow<MoviesListState>(MoviesListState.Loading)
     val moviesListState = moviesListStateMutable.asStateFlow()
+
+    private val favoriteMoviesStateMutable =
+        MutableStateFlow<MoviesListState>(MoviesListState.Loading)
+    val favoriteMoviesState = favoriteMoviesStateMutable.asStateFlow()
 
     private var configuration: Configuration? = null
 
@@ -53,11 +59,40 @@ class MoviesViewModel @Inject constructor(
                 addFavoriteUseCase.invoke(movie)
             }
         }
-        val currentState = moviesListStateMutable.value
+        updateFavoritesInMoviesList(movie, !movie.isFavorite)
+    }
+
+    fun getAllFavoriteMovies() {
+        viewModelScope.launch {
+            val result = getFavoritesUseCase.invoke()
+            if (result.isEmpty()) {
+                favoriteMoviesStateMutable.value = MoviesListState.Failed
+            } else {
+                favoriteMoviesStateMutable.value = MoviesListState.Loaded(result)
+            }
+        }
+    }
+
+    fun removeFavorite(movie: Movie) {
+        viewModelScope.launch {
+            removeFavoriteUseCase.invoke(movie)
+        }
+        val currentState = favoriteMoviesState.value
+        if (currentState is MoviesListState.Loaded) {
+            favoriteMoviesStateMutable.value = MoviesListState.Loaded(
+                currentState.movies.map {
+                    if (it.id == movie.id) it.copy(isFavorite = false) else it
+                }
+            )
+        }
+    }
+
+    fun updateFavoritesInMoviesList(movie: Movie, isFavorite: Boolean) {
+        val currentState = moviesListState.value
         if (currentState is MoviesListState.Loaded) {
             moviesListStateMutable.value = MoviesListState.Loaded(
                 currentState.movies.map {
-                    if (it.id == movie.id) it.copy(isFavorite = !it.isFavorite) else it
+                    if (it.id == movie.id) it.copy(isFavorite = isFavorite) else it
                 }
             )
         }
