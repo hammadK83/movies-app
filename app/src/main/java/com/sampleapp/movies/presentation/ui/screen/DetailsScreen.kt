@@ -159,9 +159,12 @@ fun MovieDetails(movie: Movie, viewModel: MoviesViewModel, contentPadding: Paddi
 
                 // Release Date
                 Text(
-                    text = "Release Date: ${movie.releaseDate}",
+                    text = stringResource(
+                        R.string.released_prefix,
+                        viewModel.formatDate(movie.releaseDate)
+                    ),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray
+                    color = Color.DarkGray
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

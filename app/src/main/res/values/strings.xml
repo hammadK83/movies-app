@@ -10,5 +10,6 @@
     <string name="content_desc_remove_favorite">Remove favorite</string>
     <string name="content_desc_movie_backdrop">Movie Backdrop</string>
     <string name="content_desc_up_navigation">Navigate Up</string>
+    <string name="released_prefix">Released %1$s</string>
     <string name="overview_section_title">Overview</string>
 </resources>

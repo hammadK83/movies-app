@@ -6,6 +6,7 @@ import com.sampleapp.movies.domain.model.Configuration
 import com.sampleapp.movies.domain.model.Genre
 import com.sampleapp.movies.domain.model.Movie
 import com.sampleapp.movies.domain.usecase.AddFavoriteUseCase
+import com.sampleapp.movies.domain.usecase.FormatDateUseCase
 import com.sampleapp.movies.domain.usecase.GetConfigurationUseCase
 import com.sampleapp.movies.domain.usecase.GetFavoritesUseCase
 import com.sampleapp.movies.domain.usecase.GetGenresUseCase
@@ -25,7 +26,8 @@ class MoviesViewModel @Inject constructor(
     private val addFavoriteUseCase: AddFavoriteUseCase,
     private val removeFavoriteUseCase: RemoveFavoriteUseCase,
     private val getFavoritesUseCase: GetFavoritesUseCase,
-    private val getGenresUseCase: GetGenresUseCase
+    private val getGenresUseCase: GetGenresUseCase,
+    private val formatDateUseCase: FormatDateUseCase
 ) : ViewModel() {
     private val moviesListStateMutable = MutableStateFlow<MoviesListState>(MoviesListState.Loading)
     val moviesListState = moviesListStateMutable.asStateFlow()
@@ -77,28 +79,6 @@ class MoviesViewModel @Inject constructor(
         }
     }
 
-    fun removeMovieFromFavoritesList(movie: Movie) {
-        val currentState = favoriteMoviesState.value
-        if (currentState is MoviesListState.Loaded) {
-            favoriteMoviesStateMutable.value = MoviesListState.Loaded(
-                currentState.movies.map {
-                    if (it.id == movie.id) it.copy(isFavorite = false) else it
-                }
-            )
-        }
-    }
-
-    private fun updateFavoritesInMoviesList(movie: Movie, isFavorite: Boolean) {
-        val currentState = moviesListState.value
-        if (currentState is MoviesListState.Loaded) {
-            moviesListStateMutable.value = MoviesListState.Loaded(
-                currentState.movies.map {
-                    if (it.id == movie.id) it.copy(isFavorite = isFavorite) else it
-                }
-            )
-        }
-    }
-
     fun getMovieById(id: Long?) =
         (moviesListState.value as? MoviesListState.Loaded)?.movies?.firstOrNull {
             it.id == id
@@ -120,6 +100,30 @@ class MoviesViewModel @Inject constructor(
             }
         }
         return genresList
+    }
+
+    fun formatDate(inputDate: String?): String = formatDateUseCase.invoke(inputDate)
+
+    private fun removeMovieFromFavoritesList(movie: Movie) {
+        val currentState = favoriteMoviesState.value
+        if (currentState is MoviesListState.Loaded) {
+            favoriteMoviesStateMutable.value = MoviesListState.Loaded(
+                currentState.movies.map {
+                    if (it.id == movie.id) it.copy(isFavorite = false) else it
+                }
+            )
+        }
+    }
+
+    private fun updateFavoritesInMoviesList(movie: Movie, isFavorite: Boolean) {
+        val currentState = moviesListState.value
+        if (currentState is MoviesListState.Loaded) {
+            moviesListStateMutable.value = MoviesListState.Loaded(
+                currentState.movies.map {
+                    if (it.id == movie.id) it.copy(isFavorite = isFavorite) else it
+                }
+            )
+        }
     }
 
     private fun setFavoriteState(movies: List<Movie>) {
