@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -86,7 +87,10 @@ fun MovieItem(
                     model = viewModel.createPosterImageUrl(movie.posterPath),
                     contentScale = ContentScale.Crop,
                     contentDescription = stringResource(R.string.content_desc_movie_poster),
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    placeholder = painterResource(R.drawable.poster_image_placeholder),
+                    error = painterResource(R.drawable.poster_image_placeholder),
+                    fallback = painterResource(R.drawable.poster_image_placeholder)
                 )
                 Box(
                     modifier = Modifier

@@ -38,6 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -201,7 +202,10 @@ fun BackdropImage(movie: Movie, viewModel: MoviesViewModel, modifier: Modifier) 
         model = viewModel.createBackdropImageUrl(movie.backdropPath),
         contentDescription = stringResource(R.string.content_desc_movie_backdrop),
         contentScale = ContentScale.Crop,
-        modifier = modifier
+        modifier = modifier,
+        placeholder = painterResource(R.drawable.backdrop_image_placeholder),
+        error = painterResource(R.drawable.backdrop_image_placeholder),
+        fallback = painterResource(R.drawable.backdrop_image_placeholder),
     )
 
 @Composable
@@ -213,7 +217,10 @@ fun PosterImage(movie: Movie, viewModel: MoviesViewModel, modifier: Modifier) =
             .aspectRatio(2f / 3f)
             .shadow(8.dp, shape = MaterialTheme.shapes.medium)
             .clip(MaterialTheme.shapes.medium),
-        contentScale = ContentScale.Crop
+        contentScale = ContentScale.Crop,
+        placeholder = painterResource(R.drawable.poster_image_placeholder),
+        error = painterResource(R.drawable.poster_image_placeholder),
+        fallback = painterResource(R.drawable.poster_image_placeholder)
     )
 
 @Composable
@@ -261,8 +268,8 @@ fun TitleRow(movie: Movie, viewModel: MoviesViewModel) =
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun GenresLayout(movie: Movie, viewModel: MoviesViewModel) {
-    return FlowRow(
+fun GenresLayout(movie: Movie, viewModel: MoviesViewModel) =
+    FlowRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -283,7 +290,6 @@ fun GenresLayout(movie: Movie, viewModel: MoviesViewModel) {
             )
         }
     }
-}
 
 private fun onFavoriteClicked(movie: Movie, viewModel: MoviesViewModel) {
     viewModel.toggleFavorite(movie)
