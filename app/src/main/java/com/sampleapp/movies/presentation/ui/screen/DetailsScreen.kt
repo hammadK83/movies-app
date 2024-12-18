@@ -1,8 +1,11 @@
 package com.sampleapp.movies.presentation.ui.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -256,16 +259,21 @@ fun TitleRow(movie: Movie, viewModel: MoviesViewModel) =
         }
     }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun GenresLayout(movie: Movie, viewModel: MoviesViewModel) =
-    Row(modifier = Modifier.fillMaxWidth()) {
+fun GenresLayout(movie: Movie, viewModel: MoviesViewModel) {
+    return FlowRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        maxLines = 2
+    ) {
         val genres = viewModel.getGenres(movie.genreIds.orEmpty())
-        genres.forEachIndexed { index, genre ->
+        genres.forEach { genre ->
             Text(
                 text = genre,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
-                    .padding(end = 8.dp)
                     .background(
                         MaterialTheme.colorScheme.secondary,
                         RoundedCornerShape(8.dp)
@@ -273,11 +281,9 @@ fun GenresLayout(movie: Movie, viewModel: MoviesViewModel) =
                     .padding(horizontal = 12.dp, vertical = 4.dp),
                 color = Color.White
             )
-            if (index < genres.size - 1) {
-                Spacer(modifier = Modifier.width(8.dp))
-            }
         }
     }
+}
 
 private fun onFavoriteClicked(movie: Movie, viewModel: MoviesViewModel) {
     viewModel.toggleFavorite(movie)
