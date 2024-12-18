@@ -15,11 +15,9 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -36,6 +34,7 @@ import coil3.compose.AsyncImage
 import com.sampleapp.movies.R
 import com.sampleapp.movies.domain.model.Movie
 import com.sampleapp.movies.presentation.viewmodel.MoviesViewModel
+import com.sampleapp.movies.util.getFavoriteIcon
 
 @Composable
 fun MoviesList(
@@ -107,14 +106,8 @@ fun MovieItem(
                         modifier = Modifier.padding(4.dp)
                     ) {
                         Icon(
-                            imageVector = if (movie.isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                            contentDescription = if (movie.isFavorite) {
-                                stringResource(R.string.content_desc_remove_favorite)
-                            } else {
-                                stringResource(
-                                    R.string.content_desc_add_favorite
-                                )
-                            },
+                            imageVector = getFavoriteIcon(movie.isFavorite),
+                            contentDescription = getFavoriteIconContentDesc(movie.isFavorite),
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
@@ -132,3 +125,23 @@ fun MovieItem(
         }
     }
 }
+
+@Composable
+fun ProgressIndicator() =
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.align(Alignment.Center)
+        )
+    }
+
+@Composable
+fun getFavoriteIconContentDesc(isFavorite: Boolean) =
+    if (isFavorite) {
+        stringResource(R.string.content_desc_remove_favorite)
+    } else {
+        stringResource(
+            R.string.content_desc_add_favorite
+        )
+    }

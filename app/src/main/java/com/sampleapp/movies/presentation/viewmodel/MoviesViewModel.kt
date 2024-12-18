@@ -63,6 +63,7 @@ class MoviesViewModel @Inject constructor(
             }
         }
         updateFavoritesInMoviesList(movie, !movie.isFavorite)
+        removeMovieFromFavoritesList(movie)
     }
 
     fun getAllFavoriteMovies() {
@@ -76,10 +77,7 @@ class MoviesViewModel @Inject constructor(
         }
     }
 
-    fun removeFavorite(movie: Movie) {
-        viewModelScope.launch {
-            removeFavoriteUseCase.invoke(movie)
-        }
+    fun removeMovieFromFavoritesList(movie: Movie) {
         val currentState = favoriteMoviesState.value
         if (currentState is MoviesListState.Loaded) {
             favoriteMoviesStateMutable.value = MoviesListState.Loaded(
@@ -90,7 +88,7 @@ class MoviesViewModel @Inject constructor(
         }
     }
 
-    fun updateFavoritesInMoviesList(movie: Movie, isFavorite: Boolean) {
+    private fun updateFavoritesInMoviesList(movie: Movie, isFavorite: Boolean) {
         val currentState = moviesListState.value
         if (currentState is MoviesListState.Loaded) {
             moviesListStateMutable.value = MoviesListState.Loaded(
@@ -104,7 +102,7 @@ class MoviesViewModel @Inject constructor(
     fun getMovieById(id: Long?) =
         (moviesListState.value as? MoviesListState.Loaded)?.movies?.firstOrNull {
             it.id == id
-        }
+        } ?: (favoriteMoviesState.value as? MoviesListState.Loaded)?.movies?.firstOrNull()
 
     fun createPosterImageUrl(imagePath: String?) = configuration?.imageBaseUrl?.let {
         "$it/w342/$imagePath"
@@ -127,9 +125,9 @@ class MoviesViewModel @Inject constructor(
     private fun setFavoriteState(movies: List<Movie>) {
         viewModelScope.launch {
             val favoriteMovies = getFavoritesUseCase.invoke()
-            movies.forEach {
-                if (favoriteMovies.contains(it)) {
-                    it.isFavorite = true
+            movies.forEach { movie ->
+                if (favoriteMovies.any { movie.id == it.id }) {
+                    movie.isFavorite = true
                 }
             }
         }

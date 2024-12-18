@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,7 +25,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,7 +44,9 @@ import androidx.constraintlayout.compose.Dimension
 import coil3.compose.AsyncImage
 import com.sampleapp.movies.R
 import com.sampleapp.movies.domain.model.Movie
+import com.sampleapp.movies.presentation.ui.shared.getFavoriteIconContentDesc
 import com.sampleapp.movies.presentation.viewmodel.MoviesViewModel
+import com.sampleapp.movies.util.getFavoriteIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,7 +70,6 @@ fun DetailsScreen(viewModel: MoviesViewModel, movieId: Long?, onNavigateUp: () -
     ) { contentPadding ->
         if (movie == null) {
             ErrorText(contentPadding)
-
         } else {
             MovieDetails(movie, viewModel, contentPadding)
         }
@@ -80,7 +85,7 @@ fun ErrorText(contentPadding: PaddingValues) =
     ) {
         Text(
             text = stringResource(R.string.details_screen_error_text),
-            fontSize = 24.sp,
+            fontSize = 18.sp,
             modifier = Modifier.padding(contentPadding)
         )
     }
@@ -148,12 +153,7 @@ fun MovieDetails(movie: Movie, viewModel: MoviesViewModel, contentPadding: Paddi
                     }
                     .padding(top = 32.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
-                // Movie Title
-                Text(
-                    text = movie.title.orEmpty(),
-                    style = MaterialTheme.typography.headlineLarge,
-                    fontWeight = FontWeight.Bold
-                )
+                TitleRow(movie, viewModel)
 
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -211,6 +211,49 @@ fun PosterImage(movie: Movie, viewModel: MoviesViewModel, modifier: Modifier) =
     )
 
 @Composable
+fun TitleRow(movie: Movie, viewModel: MoviesViewModel) =
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        val isFavorite = remember { mutableStateOf(movie.isFavorite) }
+
+        // Movie Name
+        Text(
+            modifier = Modifier
+                .weight(1f) // Take up available space
+                .padding(end = 16.dp),
+            text = movie.title.orEmpty(),
+            style = MaterialTheme.typography.headlineLarge,
+            fontWeight = FontWeight.Bold
+        )
+
+        // Vertical divider
+        VerticalDivider(
+            color = Color.Gray.copy(alpha = 0.5f),
+            modifier = Modifier
+                .height(40.dp) // Height of the divider
+                .width(1.dp) // Thickness of the divider
+        )
+
+        Spacer(Modifier.width(8.dp))
+
+        IconButton(
+            onClick = {
+                isFavorite.value = !isFavorite.value
+                onFavoriteClicked(movie, viewModel)
+            },
+        ) {
+            Icon(
+                imageVector = getFavoriteIcon(isFavorite.value),
+                contentDescription = getFavoriteIconContentDesc(isFavorite.value),
+                modifier = Modifier.size(48.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
+
+@Composable
 fun GenresLayout(movie: Movie, viewModel: MoviesViewModel) =
     Row(modifier = Modifier.fillMaxWidth()) {
         val genres = viewModel.getGenres(movie.genreIds.orEmpty())
@@ -233,5 +276,6 @@ fun GenresLayout(movie: Movie, viewModel: MoviesViewModel) =
         }
     }
 
-
-
+private fun onFavoriteClicked(movie: Movie, viewModel: MoviesViewModel) {
+    viewModel.toggleFavorite(movie)
+}

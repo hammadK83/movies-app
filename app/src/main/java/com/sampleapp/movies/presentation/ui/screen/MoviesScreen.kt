@@ -1,7 +1,6 @@
 package com.sampleapp.movies.presentation.ui.screen
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -9,6 +8,7 @@ import androidx.compose.ui.Modifier
 import com.sampleapp.movies.domain.model.Movie
 import com.sampleapp.movies.presentation.state.MoviesListState
 import com.sampleapp.movies.presentation.ui.shared.MoviesList
+import com.sampleapp.movies.presentation.ui.shared.ProgressIndicator
 import com.sampleapp.movies.presentation.viewmodel.MoviesViewModel
 
 @Composable
@@ -21,7 +21,7 @@ fun MoviesScreen(viewModel: MoviesViewModel, onClickMovie: (movieId: Long) -> Un
 
     when (state) {
         is MoviesListState.Loading -> {
-            CircularProgressIndicator(modifier = Modifier.fillMaxSize())
+            ProgressIndicator()
         }
 
         is MoviesListState.Loaded -> {
