@@ -1,13 +1,14 @@
 [versions]
 activityCompose = "1.9.3"
 androidGradlePlugin = "8.7.3"
+constraintlayoutCompose = "1.1.0"
 coreKtx = "1.15.0"
 ksp = "2.0.21-1.0.27"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 kotlinAndroid = "2.0.20"
 lifecycleRuntimeKtx = "2.8.7"
-composeBom = "2024.11.00"
+composeBom = "2024.12.01"
 retrofit = "2.11.0"
 moshi = "1.15.1"
 hilt = "2.52"
@@ -17,6 +18,7 @@ coil = "3.0.4"
 
 [libraries]
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 ext-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
 junit = { module = "junit:junit", version.ref = "junit" }

@@ -3,5 +3,12 @@
     <string name="movies_screen_name">Movies</string>
     <string name="favorites_screen_name">Favorites</string>
     <string name="favorites_screen_empty_list_text">Your favorite movies will display here</string>
+    <string name="details_screen_error_text">An error occurred, please try again.</string>
+    <string name="details_screen_top_bar_title">Movie Details</string>
     <string name="content_desc_movie_poster">Movie Poster</string>
+    <string name="content_desc_add_favorite">Add favorite</string>
+    <string name="content_desc_remove_favorite">Remove favorite</string>
+    <string name="content_desc_movie_backdrop">Movie Backdrop</string>
+    <string name="content_desc_up_navigation">Navigate Up</string>
+    <string name="overview_section_title">Overview</string>
 </resources>

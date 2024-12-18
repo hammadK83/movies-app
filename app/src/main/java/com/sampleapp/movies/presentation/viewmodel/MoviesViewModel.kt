@@ -7,7 +7,6 @@ import com.sampleapp.movies.domain.model.Genre
 import com.sampleapp.movies.domain.model.Movie
 import com.sampleapp.movies.domain.usecase.AddFavoriteUseCase
 import com.sampleapp.movies.domain.usecase.GetConfigurationUseCase
-import com.sampleapp.movies.domain.usecase.GetFavoriteByIdUseCase
 import com.sampleapp.movies.domain.usecase.GetFavoritesUseCase
 import com.sampleapp.movies.domain.usecase.GetGenresUseCase
 import com.sampleapp.movies.domain.usecase.GetPopularMoviesUseCase
@@ -26,7 +25,6 @@ class MoviesViewModel @Inject constructor(
     private val addFavoriteUseCase: AddFavoriteUseCase,
     private val removeFavoriteUseCase: RemoveFavoriteUseCase,
     private val getFavoritesUseCase: GetFavoritesUseCase,
-    private val getFavoriteByIdUseCase: GetFavoriteByIdUseCase,
     private val getGenresUseCase: GetGenresUseCase
 ) : ViewModel() {
     private val moviesListStateMutable = MutableStateFlow<MoviesListState>(MoviesListState.Loading)
@@ -46,7 +44,7 @@ class MoviesViewModel @Inject constructor(
             val result = getPopularMoviesUseCase.invoke()
             result.fold(
                 onSuccess = { movies ->
-                    movies.forEach { it.setIsFavorite(getFavoriteByIdUseCase) }
+                    setFavoriteState(movies)
                     moviesListStateMutable.value = MoviesListState.Loaded(movies)
                 },
                 onFailure = {
@@ -103,8 +101,38 @@ class MoviesViewModel @Inject constructor(
         }
     }
 
-    fun createImageUrl(imagePath: String?) = configuration?.imageBaseUrl?.let {
-        "$it/w500/$imagePath"
+    fun getMovieById(id: Long?) =
+        (moviesListState.value as? MoviesListState.Loaded)?.movies?.firstOrNull {
+            it.id == id
+        }
+
+    fun createPosterImageUrl(imagePath: String?) = configuration?.imageBaseUrl?.let {
+        "$it/w342/$imagePath"
+    }
+
+    fun createBackdropImageUrl(imagePath: String?) = configuration?.imageBaseUrl?.let {
+        "$it/w780/$imagePath"
+    }
+
+    fun getGenres(genreIds: List<Int>): List<String> {
+        val genresList = mutableListOf<String>()
+        genres?.forEach {
+            if (it.id in genreIds) {
+                genresList.add(it.name)
+            }
+        }
+        return genresList
+    }
+
+    private fun setFavoriteState(movies: List<Movie>) {
+        viewModelScope.launch {
+            val favoriteMovies = getFavoritesUseCase.invoke()
+            movies.forEach {
+                if (favoriteMovies.contains(it)) {
+                    it.isFavorite = true
+                }
+            }
+        }
     }
 
     private fun getConfiguration() {

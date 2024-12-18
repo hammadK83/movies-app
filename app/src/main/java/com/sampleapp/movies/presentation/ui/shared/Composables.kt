@@ -2,6 +2,7 @@ package com.sampleapp.movies.presentation.ui.shared
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,7 +41,8 @@ import com.sampleapp.movies.presentation.viewmodel.MoviesViewModel
 fun MoviesList(
     movies: List<Movie>,
     viewModel: MoviesViewModel,
-    onClickFavorite: (movie: Movie) -> Unit
+    onClickFavorite: (movie: Movie) -> Unit,
+    onClickMovie: (movieId: Long) -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -50,7 +52,7 @@ fun MoviesList(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(movies.size) { index ->
-            MovieItem(movie = movies[index], viewModel, onClickFavorite)
+            MovieItem(movie = movies[index], viewModel, onClickFavorite, onClickMovie)
         }
     }
 }
@@ -59,13 +61,15 @@ fun MoviesList(
 fun MovieItem(
     movie: Movie,
     viewModel: MoviesViewModel,
-    onClickFavorite: (movie: Movie) -> Unit
+    onClickFavorite: (movie: Movie) -> Unit,
+    onClickMovie: (movieId: Long) -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White),
+            .background(Color.White)
+            .clickable { onClickMovie(movie.id) },
         elevation = CardDefaults.cardElevation(2.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
@@ -80,7 +84,7 @@ fun MovieItem(
                 modifier = Modifier.fillMaxSize()
             ) {
                 AsyncImage(
-                    model = viewModel.createImageUrl(movie.posterPath),
+                    model = viewModel.createPosterImageUrl(movie.posterPath),
                     contentScale = ContentScale.Crop,
                     contentDescription = stringResource(R.string.content_desc_movie_poster),
                     modifier = Modifier.fillMaxSize()
@@ -104,7 +108,13 @@ fun MovieItem(
                     ) {
                         Icon(
                             imageVector = if (movie.isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                            contentDescription = null, // TODO: Update this based on the favorite state
+                            contentDescription = if (movie.isFavorite) {
+                                stringResource(R.string.content_desc_remove_favorite)
+                            } else {
+                                stringResource(
+                                    R.string.content_desc_add_favorite
+                                )
+                            },
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }

@@ -6,6 +6,8 @@ data class MovieApiModel(
     val id: Long,
     @Json(name = "poster_path")
     val posterPath: String?,
+    @Json(name = "backdrop_path")
+    val backdropPath: String?,
     @Json(name = "genre_ids")
     val genreIds: List<Int>?,
     val title: String?,

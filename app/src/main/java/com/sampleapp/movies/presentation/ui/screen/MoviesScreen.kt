@@ -12,7 +12,7 @@ import com.sampleapp.movies.presentation.ui.shared.MoviesList
 import com.sampleapp.movies.presentation.viewmodel.MoviesViewModel
 
 @Composable
-fun MoviesScreen(viewModel: MoviesViewModel) {
+fun MoviesScreen(viewModel: MoviesViewModel, onClickMovie: (movieId: Long) -> Unit) {
     val state = viewModel.moviesListState.collectAsState().value
 
     if (state == MoviesListState.Loading) {
@@ -25,9 +25,14 @@ fun MoviesScreen(viewModel: MoviesViewModel) {
         }
 
         is MoviesListState.Loaded -> {
-            MoviesList(state.movies, viewModel) { movie ->
-                handeOnClickFavorite(viewModel, movie)
-            }
+            MoviesList(
+                state.movies,
+                viewModel,
+                onClickFavorite = { movie ->
+                    handeOnClickFavorite(viewModel, movie)
+                },
+                onClickMovie = onClickMovie
+            )
         }
 
         is MoviesListState.Failed -> {

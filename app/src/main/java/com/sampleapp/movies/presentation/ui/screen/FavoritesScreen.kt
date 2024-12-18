@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.sampleapp.movies.R
 import com.sampleapp.movies.domain.model.Movie
 import com.sampleapp.movies.presentation.state.MoviesListState
@@ -15,7 +14,7 @@ import com.sampleapp.movies.presentation.ui.shared.MoviesList
 import com.sampleapp.movies.presentation.viewmodel.MoviesViewModel
 
 @Composable
-fun FavoritesScreen(viewModel: MoviesViewModel) {
+fun FavoritesScreen(viewModel: MoviesViewModel, onClickMovie: (movieId: Long) -> Unit) {
     val state = viewModel.favoriteMoviesState.collectAsState().value
 
     viewModel.getAllFavoriteMovies()
@@ -26,9 +25,14 @@ fun FavoritesScreen(viewModel: MoviesViewModel) {
         }
 
         is MoviesListState.Loaded -> {
-            MoviesList(state.movies, viewModel) { movie ->
-                handleOnClickFavorite(viewModel, movie)
-            }
+            MoviesList(
+                state.movies,
+                viewModel,
+                onClickFavorite = { movie ->
+                    handleOnClickFavorite(viewModel, movie)
+                },
+                onClickMovie = onClickMovie
+            )
         }
 
         is MoviesListState.Failed -> {

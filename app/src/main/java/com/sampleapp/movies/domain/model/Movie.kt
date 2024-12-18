@@ -5,6 +5,7 @@ import com.sampleapp.movies.domain.usecase.GetFavoriteByIdUseCase
 data class Movie(
     val id: Long,
     val posterPath: String?,
+    val backdropPath: String?,
     val genreIds: List<Int>?,
     val title: String?,
     val overview: String?,
